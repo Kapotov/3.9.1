@@ -101,9 +101,10 @@ Content-Type: text/html; charset=iso-8859-1
 
 
 4. Проверьте на TLS-уязвимости произвольный сайт в интернете (кроме сайтов МВД, ФСБ, МинОбр, НацБанк, РосКосмос, РосАтом, РосНАНО и любых госкомпаний, объектов КИИ, ВПК и т. п.).
+# Ответ:
 
 ```
-$ ./testssl.sh/testssl.sh -U --sneaky https://en.wikipedia.org/
+root@vagrant:~/testssl.sh# ./testssl.sh -U --sneaky https://en.wikipedia.org/
 
 ###########################################################
     testssl.sh       3.1dev from https://testssl.sh/dev/
@@ -156,10 +157,27 @@ $ ./testssl.sh/testssl.sh -U --sneaky https://en.wikipedia.org/
  ```
 
 5. Установите на Ubuntu SSH-сервер, сгенерируйте новый приватный ключ. Скопируйте свой публичный ключ на другой сервер. Подключитесь к серверу по SSH-ключу.
+# Ответ:
+```
+vm1: 
+ssh-keygen -t rsa
+cd ./ssh
+ssh-copy-id -i id_rsa.pub vagrant@10.20.2.5
+
+vm2:
+vim /etc/ssh/sshd_config
+PermitRootLogin no 
+PasswordAuthentication no 
+
+systemctl restart ssh.service
+ufw allow ssh
+```
  
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH-клиента так, чтобы вход на удалённый сервер осуществлялся по имени сервера.
+# Ответ:
 
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
+# Ответ:
 
 *В качестве решения приложите: скриншоты, выполняемые команды, комментарии (при необходимости).*
 
