@@ -157,6 +157,7 @@ root@vagrant:~/testssl.sh# ./testssl.sh -U --sneaky https://en.wikipedia.org/
  ```
 
 5. Установите на Ubuntu SSH-сервер, сгенерируйте новый приватный ключ. Скопируйте свой публичный ключ на другой сервер. Подключитесь к серверу по SSH-ключу.
+
 # Ответ:
 ```
 vm1: 
@@ -175,6 +176,16 @@ ufw allow ssh
  
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH-клиента так, чтобы вход на удалённый сервер осуществлялся по имени сервера.
 # Ответ:
+```
+mv ~/.ssh/id_dsa ~/.ssh/id_dsa_bla_bla
+vim ~/.ssh/config
+Host *
+  IdentitiesOnly yes
+Host test-vm2
+  Hostname 10.20.2.5
+  User vagrant
+  IdentityFile ~/.ssh/id_dsa_bla_bla
+  ```
 
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
 # Ответ:
