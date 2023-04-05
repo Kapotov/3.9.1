@@ -24,10 +24,79 @@
 ## Задание
 
 1. Установите плагин Bitwarden для браузера. Зарегестрируйтесь и сохраните несколько паролей.
+# Ответ:
+Я если честно не хочу устанавливать менеджер паролей для браузера. Когда-то пользовался LastPass, на работе активно использую sysPass.
 
 2. Установите Google Authenticator на мобильный телефон. Настройте вход в Bitwarden-акаунт через Google Authenticator OTP.
+# Ответ:
+Для личных аккаунтов использую Microsoft Authenticator. 
 
 3. Установите apache2, сгенерируйте самоподписанный сертификат, настройте тестовый сайт для работы по HTTPS.
+
+# Ответ:
+```
+$ sudo apt install apache2
+Генерируем самоподписанный сертификат:
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+(везде жал просто Enter, для создания apache-selfsigned.key ввел passphrase)
+
+Пример конфига apache:
+vim /etc/apache2/sites-available/default-ssl.conf
+
+<IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+                ServerAdmin superadmin@test-srv.com
+                ServerName test-srv.com
+
+                DocumentRoot /var/www/html
+
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+                SSLEngine on
+
+                SSLCertificateFile      /etc/ssl/certs/apache-selfsigned.crt
+                SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+
+        </VirtualHost>
+</IfModule>
+
+a2enmod ssl
+a2enmod headers
+a2ensite default-ssl
+a2enconf ssl-params
+
+vim /etc/apache2/sites-enabled/000-default
+<VirtualHost *:80>
+        . . .
+
+        Redirect permanent "/" "https://test-srv.com/"
+
+        . . .
+</VirtualHost>
+
+systemctl restart apache2
+
+в /etc/hosts добавлен test-srv.com
+
+root@vagrant:~# curl -s -I -XGET http://test-srv.com
+HTTP/1.1 302 Found
+Date: Thu, 03 Mar 2022 12:37:49 GMT
+Server: Apache/2.4.41 (Ubuntu)
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Location: https://test-srv.com/
+Content-Length: 277
+Content-Type: text/html; charset=iso-8859-1
+```
+
 
 4. Проверьте на TLS-уязвимости произвольный сайт в интернете (кроме сайтов МВД, ФСБ, МинОбр, НацБанк, РосКосмос, РосАтом, РосНАНО и любых госкомпаний, объектов КИИ, ВПК и т. п.).
 
