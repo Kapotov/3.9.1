@@ -189,6 +189,16 @@ Host test-vm2
 
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
 # Ответ:
+```
+root@vagrant:~# tcpdump -nnei any -c 100 -w 100packets.pcap
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+100 packets captured
+101 packets received by filter
+0 packets dropped by kernel
+```
+![снимок](https://user-images.githubusercontent.com/123774335/230070972-c50465fd-2e11-4bcc-b253-7cacc537fbfb.jpg)
+
+
 
 *В качестве решения приложите: скриншоты, выполняемые команды, комментарии (при необходимости).*
 
